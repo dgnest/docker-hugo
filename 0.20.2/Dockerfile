@@ -1,12 +1,10 @@
-FROM go:1.8.0
+FROM golang:1.8.0
 MAINTAINER slovacus@gmail.com
 
 # Install.
 RUN \
-  sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list && \
+  sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list \
   && apt-get update \
-  && apt-get -y upgrade \
-  && locale-gen en_US.UTF-8 \
   && apt-get install -y build-essential \
   && apt-get install -y software-properties-common \
   && apt-get install -y curl git man unzip vim wget zsh \
@@ -15,14 +13,13 @@ RUN \
   && rm -rf /var/lib/apt/lists/*
 
 # Download and install hugo
-ENV HUGO_VERSION 0.22.2
-ENV HUGO_BINARY hugo_${HUGO_VERSION}_linux-64bit
-
 RUN rm -rf /usr/local/bin/hugo &> /dev/null
-ADD https://github.com/spf13/hugo/releases/download/v${HUGO_VERSION}/${HUGO_BINARY}.tgz /usr/local/
-RUN tar xzf /usr/local/${HUGO_BINARY}.tgz -C /usr/local/ \
-    && ln -s /usr/local/${HUGO_BINARY}/${HUGO_BINARY} /usr/local/bin/hugo \
-    && rm /usr/local/${HUGO_BINARY}.tgz
+
+ADD https://github.com/spf13/hugo/releases/download/v0.20.2/hugo_0.20.2_Linux-64bit.tar.gz /usr/local/
+
+RUN tar xzf /usr/local/hugo_0.20.2_Linux-64bit.tar.gz -C /usr/local/ \
+    && ln -s /usr/local/hugo_0.20.2_linux_amd64/hugo_0.20.2_linux_amd64 /usr/local/bin/hugo \
+    && rm /usr/local/hugo_0.20.2_Linux-64bit.tar.gz
 
 # Define working directory.
 WORKDIR /docker
